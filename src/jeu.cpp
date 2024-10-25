@@ -1,7 +1,7 @@
 #ifndef JEU_H
 #define JEU_H
 
-#include "jeu.h"
+#include "../headers/jeu.h"
 #include <iostream>
 
 // Constructeur de la classe Jeu
