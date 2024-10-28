@@ -1,9 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "../headers/mobile.h"
-#include "../headers/vaisseau.h"
-#include "../headers/asteroide.h"
-#include "../headers/jeu.h"
+#include "mobile.h"
+#include "vaisseau.h"
+#include "asteroide.h"
+#include "jeu.h"
 
 int main()
 {

@@ -1,7 +1,4 @@
-#ifndef JEU_H
-#define JEU_H
-
-#include "../headers/jeu.h"
+#include "jeu.h"
 #include <iostream>
 
 // Constructeur de la classe Jeu
@@ -16,16 +13,19 @@ Jeu::Jeu(const std::string &textureFile)
     background.setTexture(texturebg);
 }
 
+// Méthode qui retourne un objet Vaisseau
 Vaisseau Jeu::vaisseau()
 {
-    return Vaisseau("path/to/your/vaisseau_texture.png"); // Remplacez par le bon chemin
+    return Vaisseau("sprites/ship.png"); // Remplacez par le bon chemin
 }
 
+// Méthode qui retourne un objet Asteroide
 Asteroide Jeu::asteroide()
 {
-    return Asteroide("path/to/your/asteroide_texture.png", Asteroide::PETIT); // Remplacez par le bon chemin
+    return Asteroide("sprites/Asteroid.png", TailleAsteroide::PETIT); // Remplacez par le bon chemin
 }
 
+// Fonction principale du jeu
 void Jeu::run()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Mon Jeu");
@@ -61,5 +61,3 @@ void Jeu::run()
         window.display();
     }
 }
-
-#endif

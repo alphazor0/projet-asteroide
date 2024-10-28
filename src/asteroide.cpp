@@ -1,4 +1,4 @@
-#include "../headers/asteroide.h"
+#include "asteroide.h"
 
 // Constructeur
 Asteroide::Asteroide(const std::string &textureFile, TailleAsteroide taille)

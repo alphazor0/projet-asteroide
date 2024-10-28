@@ -2,3 +2,4 @@
 ./sfml-app
 .vscode/
 sfml-app
+obj/
