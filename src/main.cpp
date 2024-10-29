@@ -9,10 +9,16 @@ int main()
 {
 	// Créer la fenêtre
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Asteroidus");
+	window.setVerticalSyncEnabled(true);
 
-	Mobile ship("sprites/jul.png");
-	Asteroide meteorite("sprites/Asteroid.png", PETIT);
-	ship.setPosition(800.f, 500.f);
+	sf::Texture shiptexture;
+	shiptexture.loadFromFile("sprites/jul.png");
+	Mobile ship(shiptexture);
+	sf::Texture asteroidetexture;
+	asteroidetexture.loadFromFile("sprites/Asteroid.png");
+	Asteroide meteorite(asteroidetexture, PETIT);
+	sf::Vector2f position(800.f, 500.f);
+	ship.setPosition(position);
 
 	// Créer une horloge pour le mouvement et une autre pour la rotation
 	sf::Clock movementClock;

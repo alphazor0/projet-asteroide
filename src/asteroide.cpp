@@ -1,7 +1,7 @@
 #include "asteroide.h"
 
 // Constructeur
-Asteroide::Asteroide(const std::string &textureFile, TailleAsteroide taille)
+Asteroide::Asteroide(const sf::Texture &textureFile, TailleAsteroide taille)
     : Mobile(textureFile), // Appel au constructeur de Mobile avec un argument
       tailleAsteroide(taille)
 {
@@ -17,9 +17,6 @@ Asteroide::Asteroide(const std::string &textureFile, TailleAsteroide taille)
         break;
     case GRAND:
         sprite.setScale(1.5f, 1.5f); // Échelle pour grand
-        break;
-    case ENORME:
-        sprite.setScale(2.0f, 2.0f); // Échelle pour énorme
         break;
     default:
         std::cerr << "Taille inconnue pour l'astéroïde.\n";

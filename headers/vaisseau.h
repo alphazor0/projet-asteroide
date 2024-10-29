@@ -1,6 +1,8 @@
 #ifndef VAISSEAU_H
 #define VAISSEAU_H
+
 #include "mobile.h"
+#include "projectile.h"
 
 class Vaisseau : public Mobile
 {

@@ -7,18 +7,14 @@ Mobile::Mobile()
     speed = 5.0f;
 }
 
-Mobile::Mobile(const std::string &textureFile) // constructeur de mobile
+Mobile::Mobile(const sf::Texture &textureFile) // constructeur de mobile
 {
-    if (!texture.loadFromFile(textureFile))
-    {
-        std::cerr << "Failed to load texture!" << std::endl;
-    }
-    sprite.setTexture(texture);
+    sprite.setTexture(textureFile);
 }
 
-void Mobile::setPosition(float x, float y) // méthode pour modifier la position des mobiles
+void Mobile::setPosition(sf::Vector2f position) // méthode pour modifier la position des mobiles
 {
-    sprite.setPosition(x, y);
+    sprite.setPosition(position);
 }
 
 void Mobile::move(float offsetX, float offsetY) // méthode pour déplacer les mobiles

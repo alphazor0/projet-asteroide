@@ -7,8 +7,8 @@ class Mobile
 {
 public:
     Mobile();
-    Mobile(const std::string &textureFile);
-    void setPosition(float x, float y);
+    Mobile(const sf::Texture &textureFile);
+    void setPosition(sf::Vector2f);
     void move(float offsetX, float offsetY);
     void draw(sf::RenderWindow &window);
     void rotate(float angle);

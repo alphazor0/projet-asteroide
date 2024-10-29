@@ -10,14 +10,13 @@ enum TailleAsteroide
 {
     PETIT, // Taille petite
     MOYEN, // Taille moyenne
-    GRAND, // Taille grande
-    ENORME // Taille énorme
+    GRAND  // Taille grande
 };
 
 class Asteroide : public Mobile
 {
 public:
-    Asteroide(const std::string &textureFile, TailleAsteroide taille);
+    Asteroide(const sf::Texture &textureFile, TailleAsteroide taille);
 
 protected:
     TailleAsteroide tailleAsteroide; // Membre pour stocker la taille
