@@ -1,6 +1,11 @@
 #include "vague.h"
 #include <cstdlib>
 
+Vague::Vague()
+{
+    // Initialisation par défaut
+}
+
 // Constructeur qui initialise la vague en fonction de son numéro
 Vague::Vague(int numVague, sf::Texture &asteroidTexture, sf::Vector2u windowSize)
 {
@@ -50,4 +55,9 @@ void Vague::clearAsteroid(int index)
     {
         asteroides.erase(asteroides.begin() + index);
     }
+}
+
+std::vector<Asteroide> &Vague::getAsteroides()
+{
+    return asteroides;
 }

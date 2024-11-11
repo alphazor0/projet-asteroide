@@ -12,7 +12,9 @@ public:
     void move(float offsetX, float offsetY);
     void draw(sf::RenderWindow &window);
     void rotate(float angle);
+    virtual sf::FloatRect getBounds() const;
     float angle;
+    bool isAlive;
 
 protected:
     float speed;

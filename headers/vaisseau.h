@@ -8,6 +8,7 @@ class Vaisseau : public Mobile
 {
 
 public:
+	Vaisseau();
 	Vaisseau(const std::string &textureFile);
 
 protected:

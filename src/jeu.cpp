@@ -12,3 +12,37 @@ Jeu::Jeu(const std::string &textureFile)
     // Initialiser le sprite de fond
     background.setTexture(texturebg);
 }
+
+void Jeu::gererCollisions()
+{
+    // Collision entre les projectiles et les astéroïdes
+    auto &asteroides = vague.getAsteroides();
+    for (auto &tir : tirs)
+    {
+        for (int i = 0; i < asteroides.size(); ++i)
+        {
+            if (tir->getBounds().intersects(asteroides[i].getBounds()))
+            {
+                // Diviser l'astéroïde ou le supprimer
+                if (asteroides[i].getTaille() != PETIT)
+                {
+                    TailleAsteroide nouvelleTaille = static_cast<TailleAsteroide>(asteroides[i].getTaille() - 1);
+                    asteroides.emplace_back(asteroides[i].getTexture(), nouvelleTaille, asteroides[i].getPosition());
+                    asteroides.emplace_back(asteroides[i].getTexture(), nouvelleTaille, asteroides[i].getPosition());
+                }
+                vague.clearAsteroid(i); // Supprimer l'astéroïde touché
+                break;
+            }
+        }
+    }
+
+    // Collision entre le vaisseau et les astéroïdes
+    for (const auto &asteroide : vague.getAsteroides())
+    {
+        if (vaisseau.getBounds().intersects(asteroide.getBounds()))
+        {
+            jeuTermine = true; // Le jeu se termine si le vaisseau est touché
+            break;
+        }
+    }
+}

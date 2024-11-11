@@ -17,10 +17,13 @@ class Asteroide : public Mobile
 {
 public:
     Asteroide(const sf::Texture &textureFile, TailleAsteroide taille);
+    TailleAsteroide getTaille() const;
+    // sf::FloatRect getBounds() const; #test virtual
+    const sf::Texture &getTexture() const;
+    sf::Vector2f getPosition() const;
 
 protected:
     TailleAsteroide tailleAsteroide; // Membre pour stocker la taille
-    sf::Texture texture;
     sf::Sprite sprite;
 };
 

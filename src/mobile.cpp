@@ -2,6 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+sf::FloatRect Mobile::getBounds() const
+{
+    return sprite.getGlobalBounds(); // Retourne les limites globales du sprite
+}
+
 Mobile::Mobile()
 {
     speed = 5.0f;
@@ -31,3 +36,4 @@ void Mobile::rotate(float angle) // méthode pour effectuer une rotation de mobi
 {
     sprite.rotate(angle);
 }
+

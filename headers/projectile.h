@@ -6,10 +6,12 @@ class Projectile : public Mobile
 {
 
 public:
-    Projectile(const sf::Texture &textureFile);
+    Projectile(const sf::Texture &texture, const sf::Vector2f &position, const sf::Vector2f &direction);
+    void update(float deltaTime);
+    
 
 protected:
     sf::Clock clock; // starts the clock
-    float delay;
+    sf::Vector2f direction;
 };
 #endif
