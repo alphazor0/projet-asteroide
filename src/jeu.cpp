@@ -13,6 +13,27 @@ Jeu::Jeu(const std::string &textureFile)
     background.setTexture(texturebg);
 }
 
+void Jeu::dessiner(sf::RenderWindow &fenetre)
+{
+    // Dessiner le fond
+    fenetre.draw(background);
+
+    // Dessiner le vaisseau
+    fenetre.draw(vaisseau.getSprite());
+
+    // Dessiner les astéroïdes via la vague
+    for (const auto &asteroide : vague.getAsteroides())
+    {
+        fenetre.draw(asteroide.getSprite());
+    }
+
+    // Dessiner les projectiles
+    for (const auto &tir : tirs)
+    {
+        fenetre.draw(tir->getSprite());
+    }
+}
+
 void Jeu::gererCollisions()
 {
     // Collision entre les projectiles et les astéroïdes

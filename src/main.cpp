@@ -30,6 +30,13 @@ int main()
 	backgroundSprite.setScale(
 		static_cast<float>(window.getSize().x) / backgroundTexture.getSize().x,
 		static_cast<float>(window.getSize().y) / backgroundTexture.getSize().y);
+
+
+	Jeu jeu("sprites/bg.jpg");
+
+
+
+
 	// Boucle principale
 	while (window.isOpen())
 	{

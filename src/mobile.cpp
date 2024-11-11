@@ -1,39 +1,51 @@
 #include "mobile.h"
-#include <SFML/Graphics.hpp>
 #include <iostream>
 
-sf::FloatRect Mobile::getBounds() const
-{
-    return sprite.getGlobalBounds(); // Retourne les limites globales du sprite
-}
-
+// Constructeur par défaut
 Mobile::Mobile()
+    : speed(5.0f), angle(0.0f), isAlive(true)
 {
-    speed = 5.0f;
 }
 
-Mobile::Mobile(const sf::Texture &textureFile) // constructeur de mobile
+// Constructeur avec une texture
+Mobile::Mobile(const sf::Texture &texture)
+    : speed(5.0f), angle(0.0f), isAlive(true)
 {
-    sprite.setTexture(textureFile);
+    sprite.setTexture(texture); // Associe la texture au sprite
 }
 
-void Mobile::setPosition(sf::Vector2f position) // méthode pour modifier la position des mobiles
+// Définit la position du mobile
+void Mobile::setPosition(sf::Vector2f position)
 {
     sprite.setPosition(position);
 }
 
-void Mobile::move(float offsetX, float offsetY) // méthode pour déplacer les mobiles
+// Déplace le mobile en fonction des offsets
+void Mobile::move(float offsetX, float offsetY)
 {
     sprite.move(offsetX, offsetY);
 }
 
+// Dessine le sprite dans la fenêtre
 void Mobile::draw(sf::RenderWindow &window)
 {
     window.draw(sprite);
 }
 
-void Mobile::rotate(float angle) // méthode pour effectuer une rotation de mobile
+// Effectue une rotation
+void Mobile::rotate(float angle)
 {
     sprite.rotate(angle);
 }
 
+// Retourne les limites globales du sprite
+sf::FloatRect Mobile::getBounds() const
+{
+    return sprite.getGlobalBounds();
+}
+
+// Retourne une référence constante au sprite
+const sf::Sprite &Mobile::getSprite() const
+{
+    return sprite;
+}

@@ -24,7 +24,7 @@ public:
 
 protected:
     TailleAsteroide tailleAsteroide; // Membre pour stocker la taille
-    sf::Sprite sprite;
+    
 };
 
 #endif

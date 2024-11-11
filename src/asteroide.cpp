@@ -50,7 +50,3 @@ TailleAsteroide Asteroide::getTaille() const
     return tailleAsteroide;
 }
 
-// sf::FloatRect Asteroide::getBounds() const
-// {
-//     return sprite.getGlobalBounds(); // Retourne les limites globales du sprite
-// }

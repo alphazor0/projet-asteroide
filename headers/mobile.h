@@ -6,20 +6,26 @@
 class Mobile
 {
 public:
-    Mobile();
-    Mobile(const sf::Texture &textureFile);
-    void setPosition(sf::Vector2f);
-    void move(float offsetX, float offsetY);
-    void draw(sf::RenderWindow &window);
-    void rotate(float angle);
-    virtual sf::FloatRect getBounds() const;
-    float angle;
-    bool isAlive;
+    Mobile();                           // Constructeur par défaut
+    Mobile(const sf::Texture &texture); // Constructeur avec texture
+
+    // Méthodes principales
+    void setPosition(sf::Vector2f position); // Définit la position
+    void move(float offsetX, float offsetY); // Déplace le mobile
+    void draw(sf::RenderWindow &window);     // Dessine le mobile
+    void rotate(float angle);                // Effectue une rotation
+
+    // Getters
+    sf::FloatRect getBounds() const;     // Retourne les limites du sprite
+    const sf::Sprite &getSprite() const; // Retourne une référence au sprite
+
+    // Attributs publics
+    float angle;  // Angle actuel
+    bool isAlive; // Statut de vie du mobile
 
 protected:
-    float speed;
-    sf::Texture texture;
-    sf::Sprite sprite;
+    float speed;       // Vitesse du mobile
+    sf::Sprite sprite; // Sprite associé au mobile
 };
 
 #endif
