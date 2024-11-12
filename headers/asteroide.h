@@ -16,7 +16,7 @@ enum TailleAsteroide
 class Asteroide : public Mobile
 {
 public:
-    Asteroide(const sf::Texture &textureFile, TailleAsteroide taille);
+    Asteroide(const sf::Texture &textureFile, TailleAsteroide taille, const sf::Vector2f &position);
     TailleAsteroide getTaille() const;
     // sf::FloatRect getBounds() const; #test virtual
     const sf::Texture &getTexture() const;

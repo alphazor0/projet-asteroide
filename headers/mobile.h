@@ -19,7 +19,6 @@ public:
     sf::FloatRect getBounds() const;     // Retourne les limites du sprite
     const sf::Sprite &getSprite() const; // Retourne une référence au sprite
 
-    // Attributs publics
     float angle;  // Angle actuel
     bool isAlive; // Statut de vie du mobile
 

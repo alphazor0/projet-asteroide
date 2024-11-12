@@ -11,31 +11,46 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Asteroidus");
 	window.setVerticalSyncEnabled(true);
 
-	sf::Texture shiptexture;
-	shiptexture.loadFromFile("sprites/jul.png");
-	Mobile ship(shiptexture);
-	sf::Texture asteroidetexture;
-	asteroidetexture.loadFromFile("sprites/Asteroid.png");
-	Asteroide meteorite(asteroidetexture, PETIT);
-	sf::Vector2f position(800.f, 500.f);
-	ship.setPosition(position);
+	// sf::Texture shiptexture;
+	// shiptexture.loadFromFile("sprites/jul.png");
+	// Mobile ship(shiptexture);
+	// sf::Texture asteroidetexture;
+	// asteroidetexture.loadFromFile("sprites/Asteroid.png");
+	// Asteroide meteorite(asteroidetexture, PETIT);
+	// sf::Vector2f position(800.f, 500.f);
+	// ship.setPosition(position);
 
 	// Créer une horloge pour le mouvement et une autre pour la rotation
 	sf::Clock movementClock;
 	sf::Clock rotationClock;
+
+	// Créer une liste de projectiles
+	sf::Texture textureProjectile;
+	if (!textureProjectile.loadFromFile("sprites/bullet.png"))
+	{
+		throw std::runtime_error("Erreur de chargement de la texture des projectiles.");
+	}
+
+	std::vector<std::unique_ptr<Projectile>> tirs;
+	tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, sf::Vector2f(400, 500), sf::Vector2f(0, -1)));
+	tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, sf::Vector2f(450, 450), sf::Vector2f(0, -1)));
+
+	// Charger la texture du vaisseau
+	sf::Texture vaisseauTexture;
+	if (!vaisseauTexture.loadFromFile("sprites/jul.png"))
+	{
+		throw std::runtime_error("Erreur de chargement de la texture du vaisseau");
+	}
+
+	// Position initiale du vaisseau
+	sf::Vector2f positionVaisseau(400.0f, 500.0f);
+
+	// Initialiser le jeu
 	sf::Texture backgroundTexture;
 	backgroundTexture.loadFromFile("sprites/bg.jpg");
-	sf::Sprite backgroundSprite;
-	backgroundSprite.setTexture(backgroundTexture);
-	backgroundSprite.setScale(
-		static_cast<float>(window.getSize().x) / backgroundTexture.getSize().x,
-		static_cast<float>(window.getSize().y) / backgroundTexture.getSize().y);
 
-
-	Jeu jeu("sprites/bg.jpg");
-
-
-
+	Jeu jeu("sprites/bg.jpg", backgroundTexture, 1, false, std::move(tirs), vaisseauTexture, positionVaisseau);
+	jeu.mettreAJourBackground(window);
 
 	// Boucle principale
 	while (window.isOpen())
@@ -51,16 +66,6 @@ int main()
 
 		// Obtenir le temps écoulé depuis la dernière frame pour les mouvements
 		sf::Time deltaTime = movementClock.restart();
-
-		// Déplacer le vaisseau en fonction des touches pressées
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		{
-			ship.move(-100.f * deltaTime.asSeconds(), 0.f); // Se déplacer vers la gauche
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			ship.move(100.f * deltaTime.asSeconds(), 0.f); // Se déplacer vers la droite
-		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		{
@@ -80,12 +85,10 @@ int main()
 
 		// Effacer la fenêtre
 		window.clear();
-		// Dessin du background
-		window.draw(backgroundSprite);
 
-		// Dessiner le vaisseau dans la fenêtre
-		ship.draw(window);
-		meteorite.draw(window);
+		jeu.dessiner(window);
+		jeu.gererCollisions();
+		jeu.gererEvenements(window);
 
 		// Afficher le contenu dessiné
 		window.display();

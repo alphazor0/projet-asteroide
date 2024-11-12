@@ -22,25 +22,30 @@ sf::Vector2f Asteroide::getPosition() const
 
 
 // Constructeur
-Asteroide::Asteroide(const sf::Texture &textureFile, TailleAsteroide taille)
-    : Mobile(textureFile), // Appel au constructeur de Mobile avec un argument
-      tailleAsteroide(taille)
+Asteroide::Asteroide(const sf::Texture &textureFile, TailleAsteroide taille, const sf::Vector2f &position)
+    : Mobile(textureFile),    // Appel au constructeur de Mobile
+      tailleAsteroide(taille) // Initialisation de la taille
 {
-    tailleAsteroide = taille;
-    // Définir l'échelle en fonction de la taille
+    // Associe la texture au sprite (hérité de Mobile)
+    sprite.setTexture(textureFile);
+
+    // Définir la position initiale
+    sprite.setPosition(position);
+
+    // Ajuster l'échelle en fonction de la taille
     switch (taille)
     {
     case PETIT:
-        sprite.setScale(0.5f, 0.5f); // Échelle pour petit
+        sprite.setScale(0.5f, 0.5f);
         break;
     case MOYEN:
-        sprite.setScale(1.0f, 1.0f); // Échelle pour moyen
+        sprite.setScale(1.0f, 1.0f);
         break;
     case GRAND:
-        sprite.setScale(1.5f, 1.5f); // Échelle pour grand
+        sprite.setScale(1.5f, 1.5f);
         break;
     default:
-        std::cerr << "Taille inconnue pour l'astéroïde.\n";
+        std::cerr << "Erreur : Taille inconnue pour l'astéroïde." << std::endl;
         break;
     }
 }

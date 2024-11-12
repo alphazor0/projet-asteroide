@@ -1,5 +1,6 @@
 #include "vaisseau.h"
 #include <stdexcept>
+#include <math.h>
 
 // Constructeur par défaut
 Vaisseau::Vaisseau()
@@ -10,10 +11,48 @@ Vaisseau::Vaisseau()
 }
 
 // Constructeur avec un fichier de texture
-Vaisseau::Vaisseau(const sf::Texture &texture)
-    : Mobile(texture), delay(0.5f) // Appel au constructeur de Mobile
+Vaisseau::Vaisseau(const sf::Texture &texture, const sf::Vector2f &position)
+    : Mobile(texture) // Appel au constructeur de Mobile
 {
-    // Positionner le vaisseau au bas de l'écran (centre horizontal)
-    sprite.setPosition(400.0f, 500.0f); // Exemple de position par défaut
-    isAlive = true;                     // Le vaisseau commence en vie
+    this->angle = 0.0f;     // Angle initial
+    this->speed = 200.0f; // Vitesse initiale
+    sprite.setPosition(position);
+    sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2); // Centre du vaisseau
+}
+
+// Getter pour deltaTime
+float Vaisseau::getdeltaTime()
+{
+    return deltaTime;
+}
+
+// Getter pour delay
+float Vaisseau::getdelay()
+{
+    return delay; // Assurez-vous que 'delay' est défini dans votre classe Jeu
+}
+
+// Getter pour clock
+sf::Clock Vaisseau::getclock()
+{
+    return clock; // Retourne une copie de l'objet sf::Clock
+}
+
+void Vaisseau::tourner(float angleDelta)
+{
+    angle += angleDelta;       // Mettre à jour l'angle
+    sprite.setRotation(angle); // Appliquer la rotation au sprite
+}
+
+void Vaisseau::avancer(float deltaTime)
+{
+    // Convertir l'angle en radians
+    float angleRadians = this->angle * 3.14159f / 180.0f;
+
+    // Calculer les déplacements sur X et Y
+    float dx = std::cos(angleRadians) * this->speed * deltaTime;
+    float dy = std::sin(angleRadians) * this->speed * deltaTime;
+
+    // Mettre à jour la position
+    sprite.move(dx, dy);
 }

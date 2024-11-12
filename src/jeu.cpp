@@ -13,6 +13,44 @@ Jeu::Jeu(const std::string &textureFile)
     background.setTexture(texturebg);
 }
 
+Jeu::Jeu(const std::string &textureFile,
+         sf::Texture texturebg,
+         int numeroVague,
+         bool jeuTermine,
+         std::vector<std::unique_ptr<Projectile>> tirs,
+         sf::Texture textureVaisseau,
+         sf::Vector2f positionVaisseau)
+    : texturebg(texturebg),                       // Initialisation de la texture de fond
+      numeroVague(numeroVague),                   // Initialisation du numéro de vague
+      jeuTermine(jeuTermine),                     // Initialisation de l'état du jeu
+      tirs(std::move(tirs)),                      // Initialisation des tirs
+      vaisseau(textureVaisseau, positionVaisseau) // Initialisation du vaisseau
+{
+    // Charger la texture de fond
+    if (!this->texturebg.loadFromFile(textureFile))
+    {
+        throw std::runtime_error("Erreur de chargement de la texture de fond : " + textureFile);
+    }
+
+    // Configurer le sprite de fond
+    background.setTexture(this->texturebg);
+
+    // Charger la texture du vaisseau
+    if (!textureVaisseau.loadFromFile("sprites/jul.png"))
+    {
+        throw std::runtime_error("Erreur de chargement de la texture du vaisseau : sprites/ship.png");
+    }
+
+    // Configurer le sprite du vaisseau (déjà fait via son constructeur)
+}
+
+void Jeu::mettreAJourBackground(const sf::RenderWindow &window)
+{
+    background.setScale(
+        static_cast<float>(window.getSize().x) / background.getTexture()->getSize().x,
+        static_cast<float>(window.getSize().y) / background.getTexture()->getSize().y);
+}
+
 void Jeu::dessiner(sf::RenderWindow &fenetre)
 {
     // Dessiner le fond
@@ -65,5 +103,34 @@ void Jeu::gererCollisions()
             jeuTermine = true; // Le jeu se termine si le vaisseau est touché
             break;
         }
+    }
+}
+
+void Jeu::gererEvenements(sf::RenderWindow &fenetre)
+{
+    sf::Event event;
+    while (fenetre.pollEvent(event))
+    {
+        // Gestion des événements de la fenêtre
+        if (event.type == sf::Event::Closed)
+        {
+            fenetre.close();
+        }
+        else if (event.type == sf::Event::Resized)
+        {
+            // Mise à jour de la vue pour correspondre à la nouvelle taille de la fenêtre
+            sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+            fenetre.setView(sf::View(visibleArea));
+        }
+    }
+
+    // Gestion des entrées clavier pour le vaisseau
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    {
+        vaisseau.tourner(-100.0f * vaisseau.getdeltaTime()); // Tourner à gauche
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    {
+        vaisseau.tourner(100.0f * vaisseau.getdeltaTime()); // Tourner à droite
     }
 }

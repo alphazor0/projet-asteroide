@@ -13,12 +13,21 @@ class Jeu
 {
 public:
     Jeu(const std::string &textureFile);
+    Jeu(const std::string &textureFile,
+        sf::Texture texturebg,
+        int numeroVague,
+        bool jeuTermine,
+        std::vector<std::unique_ptr<Projectile>> tirs,
+        sf::Texture textureVaisseau,
+        sf::Vector2f positionVaisseau);
+
     Vague vague;
     Vaisseau vaisseau;
     void dessiner(sf::RenderWindow &fenetre);
-    void gererCollisions(); // Vérifie et gère les collisions
-    void tirerProjectile(); // Ajoute un projectile au vecteur `tirs`
-    
+    void gererCollisions();                          // Vérifie et gère les collisions
+    void gererEvenements(sf::RenderWindow &fenetre); // Gère les évènements
+    void tirerProjectile();                          // Ajoute un projectile au vecteur `tirs`
+    void mettreAJourBackground(const sf::RenderWindow &window);
 
 protected:
     sf::Texture texturebg;

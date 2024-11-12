@@ -12,8 +12,8 @@ OBJ_DIR = obj
 TARGET = sfml-app
 
 # Source files and object files
-SOURCES = $(SRC_DIR)/main.cpp $(SRC_DIR)/mobile.cpp $(SRC_DIR)/asteroide.cpp $(SRC_DIR)/jeu.cpp $(SRC_DIR)/projectile.cpp $(SRC_DIR)/vague.cpp
-OBJECTS = $(OBJ_DIR)/main.o $(OBJ_DIR)/mobile.o $(OBJ_DIR)/asteroide.o $(OBJ_DIR)/jeu.o $(OBJ_DIR)/projectile.o $(OBJ_DIR)/vague.o
+SOURCES = $(SRC_DIR)/main.cpp $(SRC_DIR)/mobile.cpp $(SRC_DIR)/asteroide.cpp $(SRC_DIR)/jeu.cpp $(SRC_DIR)/projectile.cpp $(SRC_DIR)/vague.cpp $(SRC_DIR)/vaisseau.cpp
+OBJECTS = $(OBJ_DIR)/main.o $(OBJ_DIR)/mobile.o $(OBJ_DIR)/asteroide.o $(OBJ_DIR)/jeu.o $(OBJ_DIR)/projectile.o $(OBJ_DIR)/vague.o $(OBJ_DIR)/vaisseau.o
 
 # Default target
 all: $(TARGET)
@@ -46,6 +46,10 @@ $(OBJ_DIR)/projectile.o: $(SRC_DIR)/projectile.cpp $(HEADERS_DIR)/projectile.h
 # Compile vague.o
 $(OBJ_DIR)/vague.o: $(SRC_DIR)/vague.cpp $(HEADERS_DIR)/vague.h
 	$(CXX) $(CXXFLAGS) $(SRC_DIR)/vague.cpp -o $(OBJ_DIR)/vague.o
+
+# Compile vaisseau.o
+$(OBJ_DIR)/vaisseau.o: $(SRC_DIR)/vaisseau.cpp $(HEADERS_DIR)/vaisseau.h
+	$(CXX) $(CXXFLAGS) $(SRC_DIR)/vaisseau.cpp -o $(OBJ_DIR)/vaisseau.o	
 
 
 # Clean up object files and the executable

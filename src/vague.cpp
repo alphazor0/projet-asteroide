@@ -20,16 +20,15 @@ void Vague::genererVague(int numVague, sf::Texture &asteroidTexture, sf::Vector2
     // Crée autant d'astéroïdes que le numéro de la vague
     for (int i = 0; i < numVague; ++i)
     {
-
-        sf::Vector2f position(rand() % windowSize.x, rand() % windowSize.y);
+        // Générer une position aléatoire dans les limites de la fenêtre
+        sf::Vector2f position(static_cast<float>(rand() % windowSize.x),
+                              static_cast<float>(rand() % windowSize.y));
 
         // Choisir une taille aléatoire d'astéroïde (PETIT, MOYEN, GRAND)
         TailleAsteroide taille = static_cast<TailleAsteroide>(rand() % 3);
 
-        // Créer et ajouter un astéroïde avec la texture, la taille et la position aléatoires
-        Asteroide asteroid(asteroidTexture, taille);
-        asteroid.setPosition(position);
-        asteroides.push_back(asteroid);
+        // Créer et ajouter un astéroïde avec la texture, la taille et la position
+        asteroides.emplace_back(asteroidTexture, taille, position);
     }
 }
 
