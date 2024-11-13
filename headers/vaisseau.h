@@ -18,7 +18,8 @@ public:
 	void mettreAJour();																		// Mettre à jour le vaisseau, par exemple pour la gestion du délai entre les tirs
 	void tourner(float angleDelta);
 	void avancer(float deltaTime);
-	
+	void update(float deltaTime);
+
 	// Getters
 	float getdeltaTime();
 	float getdelay();

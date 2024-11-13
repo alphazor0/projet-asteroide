@@ -4,7 +4,7 @@
 
 
 Projectile::Projectile(const sf::Texture &texture, const sf::Vector2f &position, const sf::Vector2f &direction)
-    : Mobile(texture), direction(direction)
+    : Mobile(texture)
 {
     setPosition(position); // Position initiale du projectile
     clock.restart();       // Démarre l'horloge pour suivre le temps écoulé

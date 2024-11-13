@@ -9,7 +9,7 @@ Mobile::Mobile()
 
 // Constructeur avec une texture
 Mobile::Mobile(const sf::Texture &texture)
-    : speed(5.0f), angle(0.0f), isAlive(true)
+    : speed(5.0f), angle(0.0f), isAlive(true), direction(0.0f, 0.0f)
 {
     sprite.setTexture(texture); // Associe la texture au sprite
 }
@@ -48,4 +48,14 @@ sf::FloatRect Mobile::getBounds() const
 const sf::Sprite &Mobile::getSprite() const
 {
     return sprite;
+}
+
+float Mobile::getAngle()
+{
+    return angle;
+}
+
+sf::Vector2f Mobile::getDirection()
+{
+    return direction;
 }

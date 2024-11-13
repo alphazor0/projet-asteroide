@@ -28,6 +28,7 @@ public:
     void gererEvenements(sf::RenderWindow &fenetre); // Gère les évènements
     void tirerProjectile();                          // Ajoute un projectile au vecteur `tirs`
     void mettreAJourBackground(const sf::RenderWindow &window);
+    void update(float deltaTime);
 
 protected:
     sf::Texture texturebg;

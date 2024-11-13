@@ -133,4 +133,28 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
     {
         vaisseau.tourner(100.0f * vaisseau.getdeltaTime()); // Tourner à droite
     }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    {
+        fenetre.close();
+    }
+}
+
+void Jeu::update(float deltaTime)
+{
+    // Mettre à jour le vaisseau
+    vaisseau.update(deltaTime);
+
+    // Mettre à jour les projectiles
+    for (auto &tir : tirs)
+    {
+        tir->update(deltaTime);
+    }
+
+    // Mettre à jour les astéroïdes dans la vague
+    for (auto &asteroide : vague.getAsteroides())
+    {
+        asteroide.update(deltaTime);
+    }
+
+    // Ajouter d'autres mises à jour si nécessaire (collisions, score, etc.)
 }

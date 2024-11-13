@@ -18,13 +18,17 @@ public:
     // Getters
     sf::FloatRect getBounds() const;     // Retourne les limites du sprite
     const sf::Sprite &getSprite() const; // Retourne une référence au sprite
+    float getAngle();                    // Retourne l'angle associé au mobile
+    sf::Vector2f getDirection();         // Retourne la direction associée au mobile
 
-    float angle;  // Angle actuel
+    // Membres publiques
     bool isAlive; // Statut de vie du mobile
 
 protected:
-    float speed;       // Vitesse du mobile
-    sf::Sprite sprite; // Sprite associé au mobile
+    float speed;            // Vitesse du mobile
+    float angle;            // Angle actuel
+    sf::Sprite sprite;      // Sprite associé au mobile
+    sf::Vector2f direction; // direction associée au sprite
 };
 
 #endif

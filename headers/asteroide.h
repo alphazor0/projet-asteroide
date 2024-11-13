@@ -21,6 +21,7 @@ public:
     // sf::FloatRect getBounds() const; #test virtual
     const sf::Texture &getTexture() const;
     sf::Vector2f getPosition() const;
+    void update(float deltaTime);
 
 protected:
     TailleAsteroide tailleAsteroide; // Membre pour stocker la taille

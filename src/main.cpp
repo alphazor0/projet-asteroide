@@ -52,43 +52,26 @@ int main()
 	Jeu jeu("sprites/bg.jpg", backgroundTexture, 1, false, std::move(tirs), vaisseauTexture, positionVaisseau);
 	jeu.mettreAJourBackground(window);
 
+	// Créer une horloge pour le temps écoulé
+	sf::Clock clock;
+
 	// Boucle principale
 	while (window.isOpen())
 	{
-		sf::Event event;
-
 		// Gérer les événements
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
+		jeu.gererEvenements(window);
 
-		// Obtenir le temps écoulé depuis la dernière frame pour les mouvements
-		sf::Time deltaTime = movementClock.restart();
+		// Mettre à jour le temps écoulé
+		float deltaTime = clock.restart().asSeconds();
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		{
-			window.close(); // Quitter l'application
-		}
-
-		// Rotation chaque seconde
-		// sf::Time elapsedTimeForRotation = rotationClock.getElapsedTime();
-		// if (elapsedTimeForRotation.asSeconds() >= 0.001f)
-		// {
-		// 	ship.rotate(0.036f);	 // Tourner de 36 degrés
-		// 	rotationClock.restart(); // Réinitialiser l'horloge de rotation
-		// }
-
-		// Afficher le temps écoulé pour le debug
-		// std::cout << "Elapsed time for rotation: " << elapsedTimeForRotation.asSeconds() << " seconds" << std::endl;
+		// Mettre à jour les entités du jeu
+		jeu.update(deltaTime);
 
 		// Effacer la fenêtre
 		window.clear();
 
+		// Dessiner les éléments du jeu
 		jeu.dessiner(window);
-		jeu.gererCollisions();
-		jeu.gererEvenements(window);
 
 		// Afficher le contenu dessiné
 		window.display();
