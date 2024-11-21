@@ -18,7 +18,7 @@ Jeu::Jeu(const std::string &textureFile,
          int numeroVague,
          bool jeuTermine,
          std::vector<std::unique_ptr<Projectile>> tirs,
-         sf::Texture textureVaisseau,
+         sf::Texture &textureVaisseau,
          sf::Vector2f positionVaisseau)
     : texturebg(texturebg),                       // Initialisation de la texture de fond
       numeroVague(numeroVague),                   // Initialisation du numéro de vague
@@ -36,7 +36,7 @@ Jeu::Jeu(const std::string &textureFile,
     background.setTexture(this->texturebg);
 
     // Charger la texture du vaisseau
-    if (!textureVaisseau.loadFromFile("sprites/jul.png"))
+    if (!textureVaisseau.loadFromFile("sprites/ship.png"))
     {
         throw std::runtime_error("Erreur de chargement de la texture du vaisseau : sprites/ship.png");
     }
@@ -74,6 +74,7 @@ void Jeu::dessiner(sf::RenderWindow &fenetre)
 
 void Jeu::gererCollisions()
 {
+
     // Collision entre les projectiles et les astéroïdes
     auto &asteroides = vague.getAsteroides();
     for (auto &tir : tirs)
@@ -106,9 +107,44 @@ void Jeu::gererCollisions()
     }
 }
 
+void Jeu::verifierPositionVaisseau(Vaisseau &vaisseau, const sf::RenderWindow &fenetre)
+{
+    sf::Vector2f position = vaisseau.getSprite().getPosition();
+    sf::Vector2u windowSize = fenetre.getSize();
+
+    // Si le vaisseau sort de la fenêtre, il "meurt" ou explose ou se perd dans l'espace et c'est gameover
+    if (position.x < 0)
+    {
+        vaisseau.isAlive = false;
+        jeuTermine = true;
+    }
+    else if (position.x > windowSize.x)
+    {
+        vaisseau.isAlive = false;
+        jeuTermine = true;
+    }
+
+    if (position.y < 0)
+    {
+        vaisseau.isAlive = false;
+        jeuTermine = true;
+    }
+    else if (position.y > windowSize.y)
+    {
+        vaisseau.isAlive = false;
+        jeuTermine = true;
+    }
+}
+
 void Jeu::gererEvenements(sf::RenderWindow &fenetre)
 {
+    if (!vaisseau.isAlive || jeuTermine) // si le vaisseau est mort ou si le jeu est terminé on gameover
+    {
+        gameOver(fenetre);
+    }
     sf::Event event;
+    vaisseau.avancer();
+    verifierPositionVaisseau(vaisseau, fenetre);
     while (fenetre.pollEvent(event))
     {
         // Gestion des événements de la fenêtre
@@ -122,39 +158,76 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
             sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
             fenetre.setView(sf::View(visibleArea));
         }
+        // Gestion des entrées clavier pour le vaisseau
     }
-
-    // Gestion des entrées clavier pour le vaisseau
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        vaisseau.tourner(-100.0f * vaisseau.getdeltaTime()); // Tourner à gauche
+        // float newangle = vaisseau.getAngle() - 10.f;
+        // vaisseau.setAngle(newangle);
+        vaisseau.tourner(-2.f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        vaisseau.tourner(100.0f * vaisseau.getdeltaTime()); // Tourner à droite
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-    {
-        fenetre.close();
+        // float newangle = vaisseau.getAngle() + 10.f;
+        // vaisseau.setAngle(newangle);
+        vaisseau.tourner(2.f);
     }
 }
 
-void Jeu::update(float deltaTime)
+void Jeu::gameOver(sf::RenderWindow &fenetre)
 {
-    // Mettre à jour le vaisseau
-    vaisseau.update(deltaTime);
+    // Effacer la fenêtre
+    fenetre.clear();
 
-    // Mettre à jour les projectiles
-    for (auto &tir : tirs)
+    // Charger une police pour afficher un message
+    sf::Font font;
+    if (!font.loadFromFile("fonts/arial.ttf")) // Remplacez par le chemin de votre police
     {
-        tir->update(deltaTime);
+        throw std::runtime_error("Erreur de chargement de la police.");
     }
 
-    // Mettre à jour les astéroïdes dans la vague
-    for (auto &asteroide : vague.getAsteroides())
-    {
-        asteroide.update(deltaTime);
-    }
+    // Créer un texte pour afficher "Game Over"
+    sf::Text gameOverText;
+    gameOverText.setFont(font);
+    gameOverText.setString("Game Over");
+    gameOverText.setCharacterSize(64);
+    gameOverText.setFillColor(sf::Color::Red);
+    gameOverText.setStyle(sf::Text::Bold);
 
-    // Ajouter d'autres mises à jour si nécessaire (collisions, score, etc.)
+    // Centrer le texte dans la fenêtre
+    gameOverText.setPosition(
+        fenetre.getSize().x / 2.f - gameOverText.getGlobalBounds().width / 2.f,
+        fenetre.getSize().y / 3.f);
+
+    // Créer un texte pour afficher les instructions
+    sf::Text restartText;
+    restartText.setFont(font);
+    restartText.setString("Appuyez sur R pour redemarrer ou ESC pour quitter");
+    restartText.setCharacterSize(32);
+    restartText.setFillColor(sf::Color::White);
+    restartText.setPosition(
+        fenetre.getSize().x / 2.f - restartText.getGlobalBounds().width / 2.f,
+        fenetre.getSize().y / 2.f);
+
+    // Afficher les messages
+    fenetre.draw(gameOverText);
+    fenetre.draw(restartText);
+    fenetre.display();
+
+    // Boucle pour gérer les événements pendant l'écran de fin
+    sf::Event event;
+    while (fenetre.waitEvent(event))
+    {
+        if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        {
+            fenetre.close(); // Quitter le jeu
+            break;
+        }
+
+        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+        // {
+        //     restart(); //
+        //     break;
+        // }
+    }
 }

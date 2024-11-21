@@ -14,10 +14,12 @@ Vaisseau::Vaisseau()
 Vaisseau::Vaisseau(const sf::Texture &texture, const sf::Vector2f &position)
     : Mobile(texture) // Appel au constructeur de Mobile
 {
-    this->angle = 0.0f;   // Angle initial
-    this->speed = 200.0f; // Vitesse initiale
+    this->angle = 0.0f;  // Angle initial
+    this->speed = 10.0f; // Vitesse initiale
+    this->delay = 0.5f;
     sprite.setPosition(position);
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2); // Centre du vaisseau
+    sprite.setScale(0.1f, 0.1f);
 }
 
 // Getter pour deltaTime
@@ -38,22 +40,20 @@ sf::Clock Vaisseau::getclock()
     return clock; // Retourne une copie de l'objet sf::Clock
 }
 
-void Vaisseau::tourner(float angleDelta)
+void Vaisseau::tourner(float angle)
 {
-    angle += angleDelta;       // Mettre à jour l'angle
-    sprite.setRotation(angle); // Appliquer la rotation au sprite
+    sprite.rotate(angle); // Appliquer la rotation au sprite
 }
 
-void Vaisseau::update(float deltaTime)
+void Vaisseau::avancer()
 {
-    // Convertir l'angle en radians pour le calcul du mouvement
-    float angleRadians = angle * 3.14159f / 180.0f;
+    // Convertir l'angle en radians
+    float angleRadians = sprite.getRotation() * M_PI / 180.0f;
 
-    // Calculer le déplacement
-    sf::Vector2f deplacement(
-        std::cos(angleRadians) * speed * deltaTime,
-        std::sin(angleRadians) * speed * deltaTime);
+    // Calculer les déplacements sur X et Y
+    float dx = std::cos(angleRadians) * speed;
+    float dy = std::sin(angleRadians) * speed;
 
-    // Déplacer le sprite
-    sprite.move(deplacement);
+    // Mettre à jour la position
+    sprite.move(dx, dy);
 }

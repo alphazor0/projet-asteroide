@@ -55,8 +55,3 @@ TailleAsteroide Asteroide::getTaille() const
     return tailleAsteroide;
 }
 
-void Asteroide::update(float deltaTime)
-{
-    // Déplacer l'astéroïde automatiquement
-    sprite.move(direction * speed * deltaTime);
-}

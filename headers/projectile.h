@@ -12,6 +12,6 @@ public:
 
 protected:
     sf::Clock clock; // starts the clock
-    
+    sf::Vector2f direction;
 };
 #endif

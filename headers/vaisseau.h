@@ -17,8 +17,7 @@ public:
 	void tirer(std::vector<Projectile> &projectiles, const sf::Texture &textureProjectile); // Créer un projectile
 	void mettreAJour();																		// Mettre à jour le vaisseau, par exemple pour la gestion du délai entre les tirs
 	void tourner(float angleDelta);
-	void avancer(float deltaTime);
-	void update(float deltaTime);
+	void avancer();
 
 	// Getters
 	float getdeltaTime();

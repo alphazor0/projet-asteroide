@@ -1,15 +1,17 @@
 #include "mobile.h"
 #include <iostream>
+#include <cmath>
+using namespace std;
 
 // Constructeur par défaut
 Mobile::Mobile()
-    : speed(5.0f), angle(0.0f), isAlive(true)
+    : speed(5.0f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
 {
 }
 
 // Constructeur avec une texture
 Mobile::Mobile(const sf::Texture &texture)
-    : speed(5.0f), angle(0.0f), isAlive(true), direction(0.0f, 0.0f)
+    : speed(50.0f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
 {
     sprite.setTexture(texture); // Associe la texture au sprite
 }
@@ -18,12 +20,6 @@ Mobile::Mobile(const sf::Texture &texture)
 void Mobile::setPosition(sf::Vector2f position)
 {
     sprite.setPosition(position);
-}
-
-// Déplace le mobile en fonction des offsets
-void Mobile::move(float offsetX, float offsetY)
-{
-    sprite.move(offsetX, offsetY);
 }
 
 // Dessine le sprite dans la fenêtre
@@ -55,7 +51,8 @@ float Mobile::getAngle()
     return angle;
 }
 
-sf::Vector2f Mobile::getDirection()
+void Mobile::setAngle(float angle)
 {
-    return direction;
+    this->angle = angle;
+    direction = sf::Vector2f(std::cos(angle), std::sin(angle));
 }

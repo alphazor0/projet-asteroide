@@ -31,19 +31,19 @@ int main()
 		throw std::runtime_error("Erreur de chargement de la texture des projectiles.");
 	}
 
-	std::vector<std::unique_ptr<Projectile>> tirs;
-	tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, sf::Vector2f(400, 500), sf::Vector2f(0, -1)));
-	tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, sf::Vector2f(450, 450), sf::Vector2f(0, -1)));
-
 	// Charger la texture du vaisseau
 	sf::Texture vaisseauTexture;
-	if (!vaisseauTexture.loadFromFile("sprites/jul.png"))
+	if (!vaisseauTexture.loadFromFile("sprites/ship.png"))
 	{
 		throw std::runtime_error("Erreur de chargement de la texture du vaisseau");
 	}
 
 	// Position initiale du vaisseau
-	sf::Vector2f positionVaisseau(400.0f, 500.0f);
+	sf::Vector2f positionVaisseau(960.0f, 570.0f);
+
+	std::vector<std::unique_ptr<Projectile>> tirs;
+	tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, sf::Vector2f(400, 500), sf::Vector2f(0, -1)));
+	tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, sf::Vector2f(450, 450), sf::Vector2f(0, -1)));
 
 	// Initialiser le jeu
 	sf::Texture backgroundTexture;
@@ -52,26 +52,43 @@ int main()
 	Jeu jeu("sprites/bg.jpg", backgroundTexture, 1, false, std::move(tirs), vaisseauTexture, positionVaisseau);
 	jeu.mettreAJourBackground(window);
 
-	// Créer une horloge pour le temps écoulé
-	sf::Clock clock;
-
 	// Boucle principale
 	while (window.isOpen())
 	{
+		sf::Event event;
+
 		// Gérer les événements
-		jeu.gererEvenements(window);
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
 
-		// Mettre à jour le temps écoulé
-		float deltaTime = clock.restart().asSeconds();
+		// Obtenir le temps écoulé depuis la dernière frame pour les mouvements
+		sf::Time deltaTime = movementClock.restart();
 
-		// Mettre à jour les entités du jeu
-		jeu.update(deltaTime);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			window.close(); // Quitter l'application
+		}
+
+		// Rotation chaque seconde
+		// sf::Time elapsedTimeForRotation = rotationClock.getElapsedTime();
+		// if (elapsedTimeForRotation.asSeconds() >= 0.001f)
+		// {
+		// 	ship.rotate(0.036f);	 // Tourner de 36 degrés
+		// 	rotationClock.restart(); // Réinitialiser l'horloge de rotation
+		// }
+
+		// Afficher le temps écoulé pour le debug
+		// std::cout << "Elapsed time for rotation: " << elapsedTimeForRotation.asSeconds() << " seconds" << std::endl;
 
 		// Effacer la fenêtre
 		window.clear();
 
-		// Dessiner les éléments du jeu
 		jeu.dessiner(window);
+		jeu.gererCollisions();
+		jeu.gererEvenements(window);
 
 		// Afficher le contenu dessiné
 		window.display();
