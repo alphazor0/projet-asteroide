@@ -18,7 +18,8 @@ public:
     // Getters
     sf::FloatRect getBounds() const;     // Retourne les limites du sprite
     const sf::Sprite &getSprite() const; // Retourne une référence au sprite
-    float getAngle();
+    float getAngle();                    // Permet d'obtenir l'angle du Mobile
+    sf::Vector2f getCenter(); // Permet d'obtenir le centre du Mobile (Sprite encapsulé)
 
     // Setters
     void setAngle(float angle); // Modifie l'angle

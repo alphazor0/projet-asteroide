@@ -1,5 +1,6 @@
 #include "jeu.h"
 #include <iostream>
+#include <math.h>
 
 // Constructeur de la classe Jeu
 Jeu::Jeu(const std::string &textureFile)
@@ -15,6 +16,7 @@ Jeu::Jeu(const std::string &textureFile)
 
 Jeu::Jeu(const std::string &textureFile,
          sf::Texture texturebg,
+         sf::Texture textureProjectile,
          int numeroVague,
          bool jeuTermine,
          std::vector<std::unique_ptr<Projectile>> tirs,
@@ -26,6 +28,7 @@ Jeu::Jeu(const std::string &textureFile,
       tirs(std::move(tirs)),                      // Initialisation des tirs
       vaisseau(textureVaisseau, positionVaisseau) // Initialisation du vaisseau
 {
+
     // Charger la texture de fond
     if (!this->texturebg.loadFromFile(textureFile))
     {
@@ -41,7 +44,16 @@ Jeu::Jeu(const std::string &textureFile,
         throw std::runtime_error("Erreur de chargement de la texture du vaisseau : sprites/ship.png");
     }
 
-    // Configurer le sprite du vaisseau (déjà fait via son constructeur)
+    // Charger la texture des projectiles
+    if (!textureProjectile.loadFromFile("sprites/bullet.png"))
+    {
+        std::cerr << "Erreur de chargement de la texture des projectiles" << std::endl;
+        throw std::runtime_error("Erreur de chargement de la texture des projectiles");
+    }
+    else
+    {
+        std::cout << "Texture des projectiles chargée avec succès" << std::endl;
+    }
 }
 
 void Jeu::mettreAJourBackground(const sf::RenderWindow &window)
@@ -70,6 +82,30 @@ void Jeu::dessiner(sf::RenderWindow &fenetre)
     {
         fenetre.draw(tir->getSprite());
     }
+}
+
+void Jeu::tirerProjectile()
+{
+    if (!vaisseau.isAlive)
+        return;
+
+    // Vérifier si l'intervalle entre les tirs est écoulé
+    if (vaisseau.getclock().getElapsedTime().asSeconds() < vaisseau.getdelay())
+        return;
+
+    vaisseau.getclock().restart(); // Redémarrer le timer des tirs
+
+    // Obtenir la position centrale du vaisseau
+    sf::Vector2f positionCentre = vaisseau.getCenter();
+
+    // Calculer la direction en fonction de l'orientation du vaisseau
+    float angleRadians = vaisseau.getAngle() * M_PI / 180.0f;
+    sf::Vector2f direction(std::cos(angleRadians), std::sin(angleRadians));
+
+    // Ajouter un nouveau projectile
+    tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, positionCentre, direction, 500.f));
+    // std::cout << "Nombre de projectiles : " << tirs.size() << std::endl;
+    // std::cout << "Position du projectile : " << positionCentre.x << ", " << positionCentre.y << std::endl;
 }
 
 void Jeu::gererCollisions()
@@ -143,8 +179,15 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
         gameOver(fenetre);
     }
     sf::Event event;
-    vaisseau.avancer();
+
+    // Appel de tirerProjectile pour tirer en continu
+    tirerProjectile();
+
+    // Vérifiez que le vaisseau reste dans les limites de l'écran
     verifierPositionVaisseau(vaisseau, fenetre);
+
+    // Déplacer le vaisseau en continu
+    vaisseau.avancer();
     while (fenetre.pollEvent(event))
     {
         // Gestion des événements de la fenêtre

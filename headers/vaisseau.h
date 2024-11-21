@@ -20,9 +20,10 @@ public:
 	void avancer();
 
 	// Getters
-	float getdeltaTime();
-	float getdelay();
-	sf::Clock getclock();
+	float getdeltaTime();		// Permet d'accéder à l'attribut deltaTime encapsulé
+	float getdelay();			// Permet d'accéder à l'attribut delay encapsulé
+	sf::Clock getclock();		// Permet d'accéder à l'attribut encapsulé clock
+	
 
 protected:
 	sf::Clock clock; // Gestion du temps pour limiter la fréquence des tirs

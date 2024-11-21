@@ -14,8 +14,8 @@ Vaisseau::Vaisseau()
 Vaisseau::Vaisseau(const sf::Texture &texture, const sf::Vector2f &position)
     : Mobile(texture) // Appel au constructeur de Mobile
 {
-    this->angle = 0.0f;  // Angle initial
-    this->speed = 10.0f; // Vitesse initiale
+    this->angle = 0.0f; // Angle initial
+    this->speed = 5.0f; // Vitesse initiale
     this->delay = 0.5f;
     sprite.setPosition(position);
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2); // Centre du vaisseau
