@@ -17,16 +17,19 @@ Jeu::Jeu(const std::string &textureFile)
 Jeu::Jeu(const std::string &textureFile,
          sf::Texture texturebg,
          sf::Texture textureProjectile,
+         sf::Texture &asteroidTexture,
          int numeroVague,
          bool jeuTermine,
          std::vector<std::unique_ptr<Projectile>> tirs,
          sf::Texture &textureVaisseau,
-         sf::Vector2f positionVaisseau)
-    : texturebg(texturebg),                       // Initialisation de la texture de fond
-      numeroVague(numeroVague),                   // Initialisation du numéro de vague
-      jeuTermine(jeuTermine),                     // Initialisation de l'état du jeu
-      tirs(std::move(tirs)),                      // Initialisation des tirs
-      vaisseau(textureVaisseau, positionVaisseau) // Initialisation du vaisseau
+         sf::Vector2f positionVaisseau,
+         sf::Vector2u windowSize)
+    : texturebg(texturebg),                        // Initialisation de la texture de fond
+      numeroVague(numeroVague),                    // Initialisation du numéro de vague
+      jeuTermine(jeuTermine),                      // Initialisation de l'état du jeu
+      tirs(std::move(tirs)),                       // Initialisation des tirs
+      vaisseau(textureVaisseau, positionVaisseau), // Initialisation du vaisseau
+      vague(numeroVague, asteroidTexture, windowSize)
 {
 
     // Charger la texture de fond
@@ -45,7 +48,7 @@ Jeu::Jeu(const std::string &textureFile,
     }
 
     // Charger la texture des projectiles
-    if (!textureProjectile.loadFromFile("sprites/bullet.png"))
+    if (!textureProjectile.loadFromFile("sprites/bullet1.png"))
     {
         std::cerr << "Erreur de chargement de la texture des projectiles" << std::endl;
         throw std::runtime_error("Erreur de chargement de la texture des projectiles");
@@ -63,6 +66,21 @@ void Jeu::mettreAJourBackground(const sf::RenderWindow &window)
         static_cast<float>(window.getSize().y) / background.getTexture()->getSize().y);
 }
 
+void Jeu::dessinerProjectiles(sf::RenderWindow &fenetre)
+{
+    for (const auto &tir : tirs)
+    {
+        fenetre.draw(tir->getSprite());
+    }
+}
+void Jeu::dessinerAsteroides(sf::RenderWindow &fenetre)
+{
+    for (const auto &asteroide : vague.getAsteroides())
+    {
+        fenetre.draw(asteroide.getSprite());
+    }
+}
+
 void Jeu::dessiner(sf::RenderWindow &fenetre)
 {
     // Dessiner le fond
@@ -71,17 +89,11 @@ void Jeu::dessiner(sf::RenderWindow &fenetre)
     // Dessiner le vaisseau
     fenetre.draw(vaisseau.getSprite());
 
-    // Dessiner les astéroïdes via la vague
-    for (const auto &asteroide : vague.getAsteroides())
-    {
-        fenetre.draw(asteroide.getSprite());
-    }
-
     // Dessiner les projectiles
-    for (const auto &tir : tirs)
-    {
-        fenetre.draw(tir->getSprite());
-    }
+    dessinerProjectiles(fenetre);
+
+    // Dessiner les astéroïdes via la vague
+    dessinerAsteroides(fenetre);
 }
 
 void Jeu::tirerProjectile()
@@ -103,9 +115,24 @@ void Jeu::tirerProjectile()
     sf::Vector2f direction(std::cos(angleRadians), std::sin(angleRadians));
 
     // Ajouter un nouveau projectile
-    tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, positionCentre, direction, 500.f));
+    tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, positionCentre, direction, 10.f));
+
     // std::cout << "Nombre de projectiles : " << tirs.size() << std::endl;
     // std::cout << "Position du projectile : " << positionCentre.x << ", " << positionCentre.y << std::endl;
+}
+
+void Jeu::mettreAJourProjectiles()
+{
+    for (auto &tir : tirs)
+    {
+        tir->avancer();
+    }
+
+    // Supprimer les projectiles inactifs
+    tirs.erase(std::remove_if(tirs.begin(), tirs.end(),
+                              [](const std::unique_ptr<Projectile> &tir)
+                              { return !tir->isAlive; }),
+               tirs.end());
 }
 
 void Jeu::gererCollisions()
@@ -182,6 +209,7 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
 
     // Appel de tirerProjectile pour tirer en continu
     tirerProjectile();
+    mettreAJourProjectiles();
 
     // Vérifiez que le vaisseau reste dans les limites de l'écran
     verifierPositionVaisseau(vaisseau, fenetre);

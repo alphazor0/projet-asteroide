@@ -7,7 +7,7 @@ class Projectile : public Mobile
 
 public:
     Projectile(const sf::Texture &texture, const sf::Vector2f &position, const sf::Vector2f &direction, float speed);
-    void update(float deltaTime);
+    void avancer();
     void destroy();
     
 

@@ -1,6 +1,7 @@
 // Projectile.cpp
 #include "projectile.h"
 #include <iostream>
+#include <math.h>
 
 Projectile::Projectile(const sf::Texture &texture, const sf::Vector2f &position, const sf::Vector2f &direction, float speed)
     : Mobile(texture), direction(direction)
@@ -18,16 +19,16 @@ void Projectile::destroy()
     this->isAlive = false; // Marque le projectile comme inactif
 }
 
-void Projectile::update(float deltaTime)
+void Projectile::avancer()
 {
     if (isAlive)
     {
-        // Déplacer le projectile selon sa direction et sa vitesse
-        sprite.move(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
+        // Déplacer selon la direction
+        sprite.move(direction.x * speed, direction.y * speed);
 
         // Vérifier si le projectile sort de l'écran
         sf::Vector2f position = sprite.getPosition();
-        if (position.x < 0 || position.x > 1920 || position.y < 0 || position.y > 1080) // Exemple de limites
+        if (position.x < 0 || position.x > 1920 || position.y < 0 || position.y > 1080)
         {
             destroy();
         }

@@ -9,44 +9,24 @@ int main()
 {
 	// Créer la fenêtre
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Asteroidus");
-	window.setVerticalSyncEnabled(false);
+	window.setVerticalSyncEnabled(true);
 
-	// sf::Texture shiptexture;
-	// shiptexture.loadFromFile("sprites/jul.png");
-	// Mobile ship(shiptexture);
-	// sf::Texture asteroidetexture;
-	// asteroidetexture.loadFromFile("sprites/Asteroid.png");
-	// Asteroide meteorite(asteroidetexture, PETIT);
-	// sf::Vector2f position(800.f, 500.f);
-	// ship.setPosition(position);
+	// Charger les textures
+	sf::Texture backgroundTexture, textureProjectile, textureVaisseau, asteroidTexture;
 
-	// Créer une horloge pour le mouvement et une autre pour la rotation
-	sf::Clock movementClock;
-	sf::Clock rotationClock;
-
-	// Charger la texture du vaisseau
-	sf::Texture vaisseauTexture;
-	if (!vaisseauTexture.loadFromFile("sprites/ship.png"))
+	if (!backgroundTexture.loadFromFile("sprites/bg.png") ||
+		!textureProjectile.loadFromFile("sprites/bullet1.png") ||
+		!textureVaisseau.loadFromFile("sprites/ship.png") ||
+		!asteroidTexture.loadFromFile("sprites/asteroid.png"))
 	{
-		throw std::runtime_error("Erreur de chargement de la texture du vaisseau");
+		std::cerr << "Erreur de chargement des textures" << std::endl;
+		return -1;
 	}
 
-	// Position initiale du vaisseau
-	sf::Vector2f positionVaisseau(960.0f, 570.0f);
-
-	std::vector<std::unique_ptr<Projectile>> tirs;
-
-	// Passer cette texture lors de l'appel à tirerProjectile
-
 	// Initialiser le jeu
-	sf::Texture backgroundTexture;
-	backgroundTexture.loadFromFile("sprites/bg.png");
-
-	sf::Texture textureProjectile;
-	textureProjectile.loadFromFile("sprites/bullet.png");
-
-	Jeu jeu("sprites/bg.png", backgroundTexture, textureProjectile, 1, false, std::move(tirs), vaisseauTexture, positionVaisseau);
-	jeu.mettreAJourBackground(window);
+	sf::Vector2f positionVaisseau(960.0f, 540.0f);
+	std::vector<std::unique_ptr<Projectile>> tirs;
+	Jeu jeu("sprites/bg.png", backgroundTexture, textureProjectile, asteroidTexture, 1, false, std::move(tirs), textureVaisseau, positionVaisseau, window.getSize());
 
 	// Boucle principale
 	while (window.isOpen())
@@ -58,22 +38,10 @@ int main()
 				window.close();
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		{
-			window.close(); // Quitter l'application
-		}
-
-		// Mettre à jour le jeu avant de dessiner
+		window.clear();
 		jeu.gererEvenements(window);
 		jeu.gererCollisions();
-
-		// Effacer la fenêtre
-		window.clear();
-
-		// Dessiner le jeu
 		jeu.dessiner(window);
-
-		// Afficher le contenu dessiné
 		window.display();
 	}
 
