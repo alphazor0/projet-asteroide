@@ -10,7 +10,7 @@ Projectile::Projectile(const sf::Texture &texture, const sf::Vector2f &position,
     setPosition(position); // Position initiale du projectile
     clock.restart();       // Démarre l'horloge pour suivre le temps écoulé
     this->speed = speed;
-    sprite.setScale(0.5f, 0.5f); // Ajuster l'échelle pour la visibilité
+    sprite.setScale(10.5f, 10.5f); // Ajuster l'échelle pour la visibilité
     // std::cout << "Projectile créé avec texture : " << &texture << "\n";
 }
 

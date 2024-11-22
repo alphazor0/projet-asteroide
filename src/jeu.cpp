@@ -20,14 +20,14 @@ Jeu::Jeu(const std::string &textureFile,
          sf::Texture &asteroidTexture,
          int numeroVague,
          bool jeuTermine,
-         std::vector<std::unique_ptr<Projectile>> tirs,
+         std::vector<Projectile> tirs,
          sf::Texture &textureVaisseau,
          sf::Vector2f positionVaisseau,
          sf::Vector2u windowSize)
     : texturebg(texturebg),                        // Initialisation de la texture de fond
       numeroVague(numeroVague),                    // Initialisation du numéro de vague
       jeuTermine(jeuTermine),                      // Initialisation de l'état du jeu
-      tirs(std::move(tirs)),                       // Initialisation des tirs
+      tirs(tirs),                                  // Initialisation des tirs
       vaisseau(textureVaisseau, positionVaisseau), // Initialisation du vaisseau
       vague(numeroVague, asteroidTexture, windowSize)
 {
@@ -68,9 +68,28 @@ void Jeu::mettreAJourBackground(const sf::RenderWindow &window)
 
 void Jeu::dessinerProjectiles(sf::RenderWindow &fenetre)
 {
+
     for (const auto &tir : tirs)
     {
-        fenetre.draw(tir->getSprite());
+        if (tir.isAlive) // Vérifier si le projectile est actif
+        {
+            std::cout << "Dessiner projectile à : (" << tir.getSprite().getPosition().x
+                      << ", " << tir.getSprite().getPosition().y << ")" << std::endl;
+            fenetre.draw(tir.getSprite());
+        }
+    }
+
+    for (const auto &tir : tirs)
+    {
+        if (tir.isAlive)
+        {
+            sf::RectangleShape debugShape;
+            debugShape.setSize(sf::Vector2f(10.f, 5.f)); // Set rectangle size
+            debugShape.setFillColor(sf::Color::Red);     // Set rectangle color
+            debugShape.setPosition(tir.getSprite().getPosition());
+            debugShape.setOrigin(debugShape.getSize().x / 2, debugShape.getSize().y / 2); // Center the rectangle
+            fenetre.draw(debugShape);
+        }
     }
 }
 void Jeu::dessinerAsteroides(sf::RenderWindow &fenetre)
@@ -81,19 +100,29 @@ void Jeu::dessinerAsteroides(sf::RenderWindow &fenetre)
     }
 }
 
+void Jeu::dessinerBackground(sf::RenderWindow &fenetre)
+{
+    fenetre.draw(background);
+}
+
+void Jeu::dessinerVaisseau(sf::RenderWindow &fenetre)
+{
+    fenetre.draw(vaisseau.getSprite());
+}
+
 void Jeu::dessiner(sf::RenderWindow &fenetre)
 {
     // Dessiner le fond
-    fenetre.draw(background);
-
-    // Dessiner le vaisseau
-    fenetre.draw(vaisseau.getSprite());
+    dessinerBackground(fenetre);
 
     // Dessiner les projectiles
     dessinerProjectiles(fenetre);
 
     // Dessiner les astéroïdes via la vague
     dessinerAsteroides(fenetre);
+
+    // Dessiner le vaisseau
+    dessinerVaisseau(fenetre);
 }
 
 void Jeu::tirerProjectile()
@@ -115,23 +144,25 @@ void Jeu::tirerProjectile()
     sf::Vector2f direction(std::cos(angleRadians), std::sin(angleRadians));
 
     // Ajouter un nouveau projectile
-    tirs.emplace_back(std::make_unique<Projectile>(textureProjectile, positionCentre, direction, 10.f));
+    tirs.emplace_back(textureProjectile, positionCentre, direction, 10.f);
 
-    // std::cout << "Nombre de projectiles : " << tirs.size() << std::endl;
-    // std::cout << "Position du projectile : " << positionCentre.x << ", " << positionCentre.y << std::endl;
+    //     // Debug : Vérifier le nombre de tirs
+    //                   std::cout
+    //         << "Projectile créé : position (" << positionCentre.x << ", " << positionCentre.y
+    //         << "), direction (" << direction.x << ", " << direction.y << ")" << std::endl;
 }
 
 void Jeu::mettreAJourProjectiles()
 {
     for (auto &tir : tirs)
     {
-        tir->avancer();
+        tir.avancer();
     }
 
     // Supprimer les projectiles inactifs
     tirs.erase(std::remove_if(tirs.begin(), tirs.end(),
-                              [](const std::unique_ptr<Projectile> &tir)
-                              { return !tir->isAlive; }),
+                              [](const Projectile &tir)
+                              { return !tir.isAlive; }),
                tirs.end());
 }
 
@@ -144,7 +175,7 @@ void Jeu::gererCollisions()
     {
         for (int i = 0; i < asteroides.size(); ++i)
         {
-            if (tir->getBounds().intersects(asteroides[i].getBounds()))
+            if (tir.getBounds().intersects(asteroides[i].getBounds()))
             {
                 // Diviser l'astéroïde ou le supprimer
                 if (asteroides[i].getTaille() != PETIT)

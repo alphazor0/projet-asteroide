@@ -20,7 +20,7 @@ public:
         sf::Texture &asteroidTexture,
         int numeroVague,
         bool jeuTermine,
-        std::vector<std::unique_ptr<Projectile>> tirs,
+        std::vector<Projectile> tirs,
         sf::Texture &textureVaisseau,
         sf::Vector2f positionVaisseau,
         sf::Vector2u windowSize);
@@ -37,6 +37,8 @@ public:
     void dessiner(sf::RenderWindow &fenetre);                   // Dessine tous les éléments du jeu dans la fenêtre (vaisseau, projectiles, astéroïdes, etc.)
     void dessinerProjectiles(sf::RenderWindow &fenetre);        // Dessiner les projectiles
     void dessinerAsteroides(sf::RenderWindow &fenetre);         // Dessiner les astéroides
+    void dessinerBackground(sf::RenderWindow &fenetre);         // Dessiner le background
+    void dessinerVaisseau(sf::RenderWindow &fenetre);           // Dessiner le vaisseau
     void mettreAJourBackground(const sf::RenderWindow &window); // Ajuste la taille du fond pour correspondre à la taille de la fenêtre
 
     // Méthodes liées aux interactions
@@ -53,7 +55,7 @@ protected:
     sf::Sprite background;
     int numeroVague;
     bool jeuTermine;
-    std::vector<std::unique_ptr<Projectile>> tirs;
+    std::vector<Projectile> tirs;
 };
 
 #endif

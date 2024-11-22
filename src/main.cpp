@@ -17,7 +17,7 @@ int main()
 	if (!backgroundTexture.loadFromFile("sprites/bg.png") ||
 		!textureProjectile.loadFromFile("sprites/bullet1.png") ||
 		!textureVaisseau.loadFromFile("sprites/ship.png") ||
-		!asteroidTexture.loadFromFile("sprites/asteroid.png"))
+		!asteroidTexture.loadFromFile("sprites/asterolienne.png"))
 	{
 		std::cerr << "Erreur de chargement des textures" << std::endl;
 		return -1;
@@ -25,8 +25,12 @@ int main()
 
 	// Initialiser le jeu
 	sf::Vector2f positionVaisseau(960.0f, 540.0f);
-	std::vector<std::unique_ptr<Projectile>> tirs;
-	Jeu jeu("sprites/bg.png", backgroundTexture, textureProjectile, asteroidTexture, 1, false, std::move(tirs), textureVaisseau, positionVaisseau, window.getSize());
+	std::vector<Projectile> tirs;
+	Jeu jeu("sprites/bg.png", backgroundTexture, textureProjectile, asteroidTexture, 1, false, tirs, textureVaisseau, positionVaisseau, window.getSize());
+
+	sf::Sprite testSprite;
+	testSprite.setTexture(textureProjectile);
+	testSprite.setPosition(400.f, 300.f); // Example position
 
 	// Boucle principale
 	while (window.isOpen())
@@ -39,6 +43,7 @@ int main()
 		}
 
 		window.clear();
+		window.draw(testSprite);
 		jeu.gererEvenements(window);
 		jeu.gererCollisions();
 		jeu.dessiner(window);

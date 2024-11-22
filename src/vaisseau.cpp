@@ -16,7 +16,7 @@ Vaisseau::Vaisseau(const sf::Texture &texture, const sf::Vector2f &position)
 {
     this->angle = 0.0f; // Angle initial
     this->speed = 5.0f; // Vitesse initiale
-    this->delay = 0.5f;
+    this->delay = 1.5f;
     sprite.setPosition(position);
     sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2); // Centre du vaisseau
     sprite.setScale(0.1f, 0.1f);

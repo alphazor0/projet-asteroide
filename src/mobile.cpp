@@ -56,7 +56,7 @@ const sf::Sprite &Mobile::getSprite() const
 
 float Mobile::getAngle()
 {
-    return angle;
+    return sprite.getRotation();
 }
 
 void Mobile::setAngle(float angle)
