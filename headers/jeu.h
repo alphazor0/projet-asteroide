@@ -43,6 +43,7 @@ public:
 
     // Méthodes liées aux interactions
     void verifierPositionVaisseau(Vaisseau &vaisseau, const sf::RenderWindow &fenetre); // Vérifie si le vaisseau est dans la fenêtre et pas en dehors
+    void verifierPositionAsteroides(Vague &vague, const sf::RenderWindow &fenetre);     // Vérifie et gère les astéroides sortant de l'écran
     void nouvelleVague();                                                               // Gère la création de vagues d'astéroides
     void gererCollisions();                                                             // Vérifie et gère les collisions
     void mettreAJourProjectiles();                                                      // Met à jour le déplacement des projectiles

@@ -1,7 +1,6 @@
 #include "asteroide.h"
 #include <math.h>
 
-
 // Getters
 
 const sf::Texture &Asteroide::getTexture() const
@@ -20,7 +19,6 @@ sf::Vector2f Asteroide::getPosition() const
 {
     return sprite.getPosition(); // Utilise la méthode SFML pour retourner la position actuelle
 }
-
 
 // Constructeur
 Asteroide::Asteroide(const sf::Texture &textureFile, TailleAsteroide taille, const sf::Vector2f &position)

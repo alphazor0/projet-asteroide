@@ -5,13 +5,13 @@ using namespace std;
 
 // Constructeur par défaut
 Mobile::Mobile()
-    : speed(0.2f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
+    : speed(0.5f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
 {
 }
 
 // Constructeur avec une texture
 Mobile::Mobile(const sf::Texture &texture)
-    : speed(0.20f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
+    : speed(0.50f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
 {
     sprite.setTexture(texture);                                                                    // Associe la texture au sprite
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f); // Origine au centre du sprite

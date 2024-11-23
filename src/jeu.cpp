@@ -255,6 +255,40 @@ void Jeu::verifierPositionVaisseau(Vaisseau &vaisseau, const sf::RenderWindow &f
     }
 }
 
+void Jeu::verifierPositionAsteroides(Vague &vague, const sf::RenderWindow &fenetre)
+{
+    sf::Vector2u windowSize = fenetre.getSize(); // Taille de la fenêtre
+
+    // Parcourir tous les astéroïdes de la vague
+    for (auto &asteroide : vague.getAsteroides())
+    {
+        sf::Vector2f position = asteroide.getPosition();
+
+        // Vérifier si l'astéroïde sort à gauche ou à droite
+        if (position.x < 0)
+        {
+            position.x = static_cast<float>(windowSize.x); // Repositionner à droite
+        }
+        else if (position.x > static_cast<float>(windowSize.x))
+        {
+            position.x = 0; // Repositionner à gauche
+        }
+
+        // Vérifier si l'astéroïde sort en haut ou en bas
+        if (position.y < 0)
+        {
+            position.y = static_cast<float>(windowSize.y); // Repositionner en bas
+        }
+        else if (position.y > static_cast<float>(windowSize.y))
+        {
+            position.y = 0; // Repositionner en haut
+        }
+
+        // Mettre à jour la position de l'astéroïde
+        asteroide.setPosition(position);
+    }
+}
+
 void Jeu::gererEvenements(sf::RenderWindow &fenetre)
 {
     if (!vaisseau.isAlive || jeuTermine) // si le vaisseau est mort ou si le jeu est terminé on gameover
@@ -267,7 +301,7 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
     tirerProjectile();
     mettreAJourProjectiles();
     mettreAJourAsteroides();
-
+    verifierPositionAsteroides(vague, fenetre);
     // Vérifiez que le vaisseau reste dans les limites de l'écran
     verifierPositionVaisseau(vaisseau, fenetre);
 
