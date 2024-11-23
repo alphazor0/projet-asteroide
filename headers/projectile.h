@@ -9,6 +9,7 @@ public:
     Projectile(const sf::Texture &texture, const sf::Vector2f &position, const sf::Vector2f &direction, float speed);
     void avancer();
     void destroy();
+    sf::Vector2f positionDuTir();
     
 
 protected:

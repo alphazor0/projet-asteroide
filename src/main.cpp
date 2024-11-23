@@ -11,13 +11,16 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Asteroidus");
 	window.setVerticalSyncEnabled(true);
 
+	// Génération de seed aléatoire basée sur le temps de l'ordinateur
+	srand(static_cast<unsigned>(time(nullptr)));
+
 	// Charger les textures
 	sf::Texture backgroundTexture, textureProjectile, textureVaisseau, asteroidTexture;
 
 	if (!backgroundTexture.loadFromFile("sprites/bg.png") ||
 		!textureProjectile.loadFromFile("sprites/bullet1.png") ||
 		!textureVaisseau.loadFromFile("sprites/ship.png") ||
-		!asteroidTexture.loadFromFile("sprites/asterolienne.png"))
+		!asteroidTexture.loadFromFile("sprites/asteroid.png"))
 	{
 		std::cerr << "Erreur de chargement des textures" << std::endl;
 		return -1;
@@ -30,7 +33,7 @@ int main()
 
 	sf::Sprite testSprite;
 	testSprite.setTexture(textureProjectile);
-	testSprite.setPosition(400.f, 300.f); // Example position
+	testSprite.setPosition(400.f, 300.f);
 
 	// Boucle principale
 	while (window.isOpen())

@@ -34,3 +34,7 @@ void Projectile::avancer()
         }
     }
 }
+
+sf::Vector2f Projectile::positionDuTir(){
+    return sprite.getPosition();
+}

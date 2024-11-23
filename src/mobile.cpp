@@ -5,15 +5,15 @@ using namespace std;
 
 // Constructeur par défaut
 Mobile::Mobile()
-    : speed(5.0f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
+    : speed(0.2f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
 {
 }
 
 // Constructeur avec une texture
 Mobile::Mobile(const sf::Texture &texture)
-    : speed(50.0f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
+    : speed(0.20f), angle(0.0f), isAlive(true), direction(1.f, 0.f)
 {
-    sprite.setTexture(texture); // Associe la texture au sprite
+    sprite.setTexture(texture);                                                                    // Associe la texture au sprite
     sprite.setOrigin(sprite.getGlobalBounds().width / 2.f, sprite.getGlobalBounds().height / 2.f); // Origine au centre du sprite
 }
 
@@ -28,7 +28,6 @@ void Mobile::setPosition(sf::Vector2f position)
 {
     sprite.setPosition(position);
 }
-
 
 // Dessine le sprite dans la fenêtre
 void Mobile::draw(sf::RenderWindow &window)
@@ -64,5 +63,3 @@ void Mobile::setAngle(float angle)
     this->angle = angle;
     direction = sf::Vector2f(std::cos(angle), std::sin(angle));
 }
-
-

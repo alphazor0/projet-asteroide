@@ -43,8 +43,10 @@ public:
 
     // Méthodes liées aux interactions
     void verifierPositionVaisseau(Vaisseau &vaisseau, const sf::RenderWindow &fenetre); // Vérifie si le vaisseau est dans la fenêtre et pas en dehors
+    void nouvelleVague();                                                               // Gère la création de vagues d'astéroides
     void gererCollisions();                                                             // Vérifie et gère les collisions
-    void mettreAJourProjectiles();
+    void mettreAJourProjectiles();                                                      // Met à jour le déplacement des projectiles
+    void mettreAJourAsteroides();                                                       // Met à jour le déplacement des astéroides
 
     // Méthode pour gérer l'état du jeu
     void gameOver(sf::RenderWindow &fenetre); // Gère l'affichage du Game Over si la partie est terminée
@@ -54,6 +56,7 @@ protected:
     sf::Texture textureProjectile; // Texture unique pour les projectiles
     sf::Sprite background;
     int numeroVague;
+    sf::Vector2u windowSize;
     bool jeuTermine;
     std::vector<Projectile> tirs;
 };

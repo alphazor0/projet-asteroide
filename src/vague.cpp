@@ -25,7 +25,24 @@ void Vague::genererVague(int numVague, sf::Texture &asteroidTexture, sf::Vector2
                               static_cast<float>(rand() % windowSize.y));
 
         // Choisir une taille aléatoire d'astéroïde (PETIT, MOYEN, GRAND)
-        TailleAsteroide taille = static_cast<TailleAsteroide>(rand() % 3);
+        TailleAsteroide taille = PETIT;
+        int r = rand() % 3; // Générer un entier entre 0 et 2
+        if (r == 0)
+        {
+            taille = PETIT;
+        }
+        else if (r == 1)
+        {
+            taille = MOYEN;
+        }
+        else
+        {
+            taille = GRAND;
+        }
+
+        // Afficher pour débogage
+        std::cout << "Asteroide créé : Taille = " << r
+                  << ", Position = (" << position.x << ", " << position.y << ")" << std::endl;
 
         // Créer et ajouter un astéroïde avec la texture, la taille et la position
         asteroides.emplace_back(asteroidTexture, taille, position);
@@ -59,4 +76,12 @@ void Vague::clearAsteroid(int index)
 std::vector<Asteroide> &Vague::getAsteroides()
 {
     return asteroides;
+}
+
+void Vague::update()
+{
+    for (auto &asteroide : asteroides)
+    {
+        asteroide.avancer();
+    }
 }

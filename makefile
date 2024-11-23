@@ -20,7 +20,7 @@ all: $(TARGET)
 
 # Link objects to create the executable
 $(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
+	$(CXX) $(OBJECTS) -o $(TARGET) $(LDFLAGS)	
 	./$(TARGET)
 
 # Compile main.o

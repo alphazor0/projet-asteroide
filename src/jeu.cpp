@@ -2,6 +2,8 @@
 #include <iostream>
 #include <math.h>
 
+sf::Texture asteroidTBis;
+
 // Constructeur de la classe Jeu
 Jeu::Jeu(const std::string &textureFile)
 {
@@ -29,7 +31,9 @@ Jeu::Jeu(const std::string &textureFile,
       jeuTermine(jeuTermine),                      // Initialisation de l'état du jeu
       tirs(tirs),                                  // Initialisation des tirs
       vaisseau(textureVaisseau, positionVaisseau), // Initialisation du vaisseau
+      windowSize(windowSize),
       vague(numeroVague, asteroidTexture, windowSize)
+
 {
 
     // Charger la texture de fond
@@ -40,6 +44,8 @@ Jeu::Jeu(const std::string &textureFile,
 
     // Configurer le sprite de fond
     background.setTexture(this->texturebg);
+
+    asteroidTBis.loadFromFile("sprites/asteroid.png");
 
     // Charger la texture du vaisseau
     if (!textureVaisseau.loadFromFile("sprites/ship.png"))
@@ -73,8 +79,8 @@ void Jeu::dessinerProjectiles(sf::RenderWindow &fenetre)
     {
         if (tir.isAlive) // Vérifier si le projectile est actif
         {
-            std::cout << "Dessiner projectile à : (" << tir.getSprite().getPosition().x
-                      << ", " << tir.getSprite().getPosition().y << ")" << std::endl;
+            /*std::cout << "Dessiner projectile à : (" << tir.getSprite().getPosition().x
+                      << ", " << tir.getSprite().getPosition().y << ")" << std::endl;*/
             fenetre.draw(tir.getSprite());
         }
     }
@@ -166,6 +172,11 @@ void Jeu::mettreAJourProjectiles()
                tirs.end());
 }
 
+void Jeu::mettreAJourAsteroides()
+{
+    vague.update();
+}
+
 void Jeu::gererCollisions()
 {
 
@@ -175,8 +186,9 @@ void Jeu::gererCollisions()
     {
         for (int i = 0; i < asteroides.size(); ++i)
         {
-            if (tir.getBounds().intersects(asteroides[i].getBounds()))
+            if (asteroides[i].getBounds().contains(tir.positionDuTir()))
             {
+
                 // Diviser l'astéroïde ou le supprimer
                 if (asteroides[i].getTaille() != PETIT)
                 {
@@ -185,6 +197,12 @@ void Jeu::gererCollisions()
                     asteroides.emplace_back(asteroides[i].getTexture(), nouvelleTaille, asteroides[i].getPosition());
                 }
                 vague.clearAsteroid(i); // Supprimer l'astéroïde touché
+
+                if (vague.isCleared())
+                {
+                    std::cout << "Prochaine vague" << std::endl;
+                    nouvelleVague(); // https://www.youtube.com/watch?v=QLkcDtdlKkk
+                }
                 break;
             }
         }
@@ -199,6 +217,13 @@ void Jeu::gererCollisions()
             break;
         }
     }
+}
+
+void Jeu::nouvelleVague()
+{
+    numeroVague = numeroVague + 1;
+    vague.genererVague(numeroVague, asteroidTBis, windowSize);
+    std::cout << numeroVague << std::endl;
 }
 
 void Jeu::verifierPositionVaisseau(Vaisseau &vaisseau, const sf::RenderWindow &fenetre)
@@ -241,12 +266,15 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
     // Appel de tirerProjectile pour tirer en continu
     tirerProjectile();
     mettreAJourProjectiles();
+    mettreAJourAsteroides();
 
     // Vérifiez que le vaisseau reste dans les limites de l'écran
     verifierPositionVaisseau(vaisseau, fenetre);
 
     // Déplacer le vaisseau en continu
     vaisseau.avancer();
+
+    // Boucle pour détecter les évènements
     while (fenetre.pollEvent(event))
     {
         // Gestion des événements de la fenêtre
@@ -262,16 +290,17 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
         }
         // Gestion des entrées clavier pour le vaisseau
     }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    {
+        fenetre.close();
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        // float newangle = vaisseau.getAngle() - 10.f;
-        // vaisseau.setAngle(newangle);
         vaisseau.tourner(-2.f);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        // float newangle = vaisseau.getAngle() + 10.f;
-        // vaisseau.setAngle(newangle);
         vaisseau.tourner(2.f);
     }
 }

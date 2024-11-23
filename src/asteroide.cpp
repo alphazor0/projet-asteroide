@@ -1,4 +1,5 @@
 #include "asteroide.h"
+#include <math.h>
 
 
 // Getters
@@ -55,3 +56,15 @@ TailleAsteroide Asteroide::getTaille() const
     return tailleAsteroide;
 }
 
+void Asteroide::avancer()
+{
+    // Convertir l'angle en radians
+    float angleRadians = sprite.getRotation() * M_PI / 180.0f;
+
+    // Calculer les déplacements sur X et Y
+    float dx = std::cos(angleRadians) * speed;
+    float dy = std::sin(angleRadians) * speed;
+
+    // Mettre à jour la position
+    sprite.move(dx, dy);
+}

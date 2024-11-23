@@ -21,10 +21,11 @@ public:
     // sf::FloatRect getBounds() const; #test virtual
     const sf::Texture &getTexture() const;
     sf::Vector2f getPosition() const;
+    void avancer();
 
 protected:
     TailleAsteroide tailleAsteroide; // Membre pour stocker la taille
-    
+    sf::Vector2f direction; // Membre pour stocker la direction
 };
 
 #endif
