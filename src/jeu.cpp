@@ -1,6 +1,7 @@
 #include "jeu.h"
 #include <iostream>
 #include <math.h>
+#include <string>
 
 sf::Texture asteroidTBis;
 
@@ -77,24 +78,35 @@ void Jeu::dessinerProjectiles(sf::RenderWindow &fenetre)
 
     for (const auto &tir : tirs)
     {
-        if (tir.isAlive) // Vérifier si le projectile est actif
-        {
-            /*std::cout << "Dessiner projectile à : (" << tir.getSprite().getPosition().x
-                      << ", " << tir.getSprite().getPosition().y << ")" << std::endl;*/
-            fenetre.draw(tir.getSprite());
-        }
+        // if (tir.isAlive) // Vérifier si le projectile est actif
+        // {
+        //     /*std::cout << "Dessiner projectile à : (" << tir.getSprite().getPosition().x
+        //               << ", " << tir.getSprite().getPosition().y << ")" << std::endl;*/
+        //     fenetre.draw(tir.getSprite());
+        // } bugué
     }
 
     for (const auto &tir : tirs)
     {
         if (tir.isAlive)
         {
-            sf::RectangleShape debugShape;
-            debugShape.setSize(sf::Vector2f(10.f, 5.f)); // Set rectangle size
-            debugShape.setFillColor(sf::Color::Red);     // Set rectangle color
-            debugShape.setPosition(tir.getSprite().getPosition());
-            debugShape.setOrigin(debugShape.getSize().x / 2, debugShape.getSize().y / 2); // Center the rectangle
-            fenetre.draw(debugShape);
+            // Dessin des tirs 
+            sf::ConvexShape projectileShape;
+            projectileShape.setPointCount(4);                     // Forme diamant
+            projectileShape.setPoint(0, sf::Vector2f(0.f, -5.f)); // haut
+            projectileShape.setPoint(1, sf::Vector2f(3.f, 0.f));  // milieu droit
+            projectileShape.setPoint(2, sf::Vector2f(0.f, 5.f));  // bas
+            projectileShape.setPoint(3, sf::Vector2f(-3.f, 0.f)); // bas gauche
+            projectileShape.setFillColor(sf::Color::Cyan);        
+            projectileShape.setOutlineThickness(1.f);
+            projectileShape.setOutlineColor(sf::Color::White); // effet brillant
+            projectileShape.setPosition(tir.getSprite().getPosition());
+            projectileShape.setOrigin(0.f, 0.f);
+            sf::CircleShape trail(3.f);
+            trail.setFillColor(sf::Color(255, 215, 0, 100)); 
+            trail.setPosition(projectileShape.getPosition() - sf::Vector2f(0, 10.f));
+            fenetre.draw(trail);
+            fenetre.draw(projectileShape);
         }
     }
 }
@@ -140,7 +152,7 @@ void Jeu::tirerProjectile()
     if (vaisseau.getclock().getElapsedTime().asSeconds() < vaisseau.getdelay())
         return;
 
-    vaisseau.getclock().restart(); // Redémarrer le timer des tirs
+    vaisseau.restartClock(); // Redémarrer le timer des tirs
 
     // Obtenir la position centrale du vaisseau
     sf::Vector2f positionCentre = vaisseau.getCenter();
@@ -150,7 +162,7 @@ void Jeu::tirerProjectile()
     sf::Vector2f direction(std::cos(angleRadians), std::sin(angleRadians));
 
     // Ajouter un nouveau projectile
-    tirs.emplace_back(textureProjectile, positionCentre, direction, 10.f);
+    tirs.emplace_back(textureProjectile, positionCentre, direction, 7.f);
 
     //     // Debug : Vérifier le nombre de tirs
     //                   std::cout
@@ -201,7 +213,7 @@ void Jeu::gererCollisions()
                 if (vague.isCleared())
                 {
                     std::cout << "Prochaine vague" << std::endl;
-                    nouvelleVague(); // https://www.youtube.com/watch?v=QLkcDtdlKkk
+                    nouvelleVague();
                 }
                 break;
             }
@@ -322,7 +334,7 @@ void Jeu::gererEvenements(sf::RenderWindow &fenetre)
             sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
             fenetre.setView(sf::View(visibleArea));
         }
-        // Gestion des entrées clavier pour le vaisseau
+    // Gestion des entrées clavier pour le vaisseau et du jeu
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -344,9 +356,9 @@ void Jeu::gameOver(sf::RenderWindow &fenetre)
     // Effacer la fenêtre
     fenetre.clear();
 
-    // Charger une police pour afficher un message
+    // On charge une police adaptée au jeu pour l'esthétique
     sf::Font font;
-    if (!font.loadFromFile("fonts/arial.ttf")) // Remplacez par le chemin de votre police
+    if (!font.loadFromFile("fonts/arial.ttf"))
     {
         throw std::runtime_error("Erreur de chargement de la police.");
     }
@@ -354,7 +366,7 @@ void Jeu::gameOver(sf::RenderWindow &fenetre)
     // Créer un texte pour afficher "Game Over"
     sf::Text gameOverText;
     gameOverText.setFont(font);
-    gameOverText.setString("Game Over");
+    gameOverText.setString("Game Over. Score: " + std::__cxx11::to_string(numeroVague));
     gameOverText.setCharacterSize(64);
     gameOverText.setFillColor(sf::Color::Red);
     gameOverText.setStyle(sf::Text::Bold);
@@ -374,7 +386,7 @@ void Jeu::gameOver(sf::RenderWindow &fenetre)
         fenetre.getSize().x / 2.f - restartText.getGlobalBounds().width / 2.f,
         fenetre.getSize().y / 2.f);
 
-    // Afficher les messages
+    // Affichage des messages
     fenetre.draw(gameOverText);
     fenetre.draw(restartText);
     fenetre.display();

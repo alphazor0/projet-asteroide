@@ -30,6 +30,10 @@ Asteroide::Asteroide(const sf::Texture &textureFile, TailleAsteroide taille, con
 
     // Définir la position initiale
     sprite.setPosition(position);
+    
+    // On définit un angle aléatoire pour obtenir une direction aléatoire
+    sprite.setRotation((float)(rand() % 360));
+
 
     // Ajuster l'échelle en fonction de la taille
     switch (taille)
@@ -60,8 +64,8 @@ void Asteroide::avancer()
     float angleRadians = sprite.getRotation() * M_PI / 180.0f;
 
     // Calculer les déplacements sur X et Y
-    float dx = std::cos(angleRadians) * speed;
-    float dy = std::sin(angleRadians) * speed;
+    float dx = std::cos(angleRadians) * 2.0f;
+    float dy = std::sin(angleRadians) * 2.0f;
 
     // Mettre à jour la position
     sprite.move(dx, dy);

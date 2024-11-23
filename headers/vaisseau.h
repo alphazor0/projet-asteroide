@@ -18,6 +18,7 @@ public:
 	void mettreAJour();																		// Mettre à jour le vaisseau, par exemple pour la gestion du délai entre les tirs
 	void tourner(float angleDelta);
 	void avancer();
+	void restartClock();
 
 	// Getters
 	float getdeltaTime();		// Permet d'accéder à l'attribut deltaTime encapsulé

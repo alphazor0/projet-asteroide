@@ -47,7 +47,7 @@ void Vague::genererVague(int numVague, sf::Texture &asteroidTexture, sf::Vector2
 
         // Choisir une taille aléatoire d'astéroïde (PETIT, MOYEN, GRAND)
         TailleAsteroide taille = PETIT;
-        int r = rand() % 3; // Générer un entier entre 0 et 2
+        int r = rand() % 3; // Générer un entier entre 0 et 2 pour randomiser la taille des astéroides
         if (r == 0)
         {
             taille = PETIT;
